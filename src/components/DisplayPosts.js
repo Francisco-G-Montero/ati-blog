@@ -19,7 +19,7 @@ class DisplayPosts extends Component {
 
     getPosts = async () => {
         const result = await API.graphql(graphqlOperation(listPosts))
-        console.log(result);
+
         this.setState({ posts: result.data.listPosts.items })
     }
 
