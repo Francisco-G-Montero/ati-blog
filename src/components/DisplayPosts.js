@@ -1,15 +1,12 @@
 import React, { Component } from 'react'
 import { listPosts } from '../graphql/queries'
 import { API, graphqlOperation } from 'aws-amplify'
+import DeletePost from './DeletePost'
+import EditPost from './EditPost'
 
 class DisplayPosts extends Component {
 
     state = {
-        ownerId: "",
-        ownerUsername: "",
-        errorMessage: "",
-        postLikedBy: [],
-        isHovering: false,
         posts: []
     }
 
@@ -47,6 +44,11 @@ class DisplayPosts extends Component {
                     <p> {post.postBody}</p>
 
                     <br />
+
+                    <span>
+                        <DeletePost />
+                        <EditPost />
+                    </span>
 
                 </div>
             )
