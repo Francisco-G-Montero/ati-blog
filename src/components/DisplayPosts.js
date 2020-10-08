@@ -41,17 +41,18 @@ class DisplayPosts extends Component {
       //retorno un loop agrupando lo de abajo?
       return (
         <div className="posts" key={post.id} style={rowStyle}>
-          <h1> {post.postTitle} </h1>{" "}
+          <h1>{post.postTitle}</h1>
           <span style={{ fontStyle: "italic", color: "#0ca5e287" }}>
-            {" "}
-            {"Whrote by: "} {post.postOwnerUsername}{" "}
-            <time> {new Date(post.createdAt).toDateString()} </time>{" "}
-          </span>{" "}
-          <p> {post.postBody} </p> <br> </br>{" "}
+            {"Whrote by: "}
+            {post.postOwnerUsername}
+            <time> {new Date(post.createdAt).toDateString()}</time>
+          </span>
+          <p>{post.postBody}</p>
+          <br></br>
           <span>
             <DeletePost />
             <EditPost />
-          </span>{" "}
+          </span>
         </div>
       );
     });
