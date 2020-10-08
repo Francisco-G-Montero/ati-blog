@@ -1,66 +1,66 @@
-import React, { Component } from 'react'
-import { listPosts } from '../graphql/queries'
-import { API, graphqlOperation } from 'aws-amplify'
-import DeletePost from './DeletePost'
-import EditPost from './EditPost'
+import React, { Component } from "react";
+import { listPosts } from "../graphql/queries";
+import { API, graphqlOperation } from "aws-amplify"; //nos permite ir a buscar de la API las queries o mutations de aws
+import DeletePost from "./DeletePost";
+import EditPost from "./EditPost";
+import { onCreatePost } from "../graphql/subscriptions";
 
 class DisplayPosts extends Component {
+  state = {
+    posts: [],
+  };
+  componentDidMount = async () => {
+    this.getPosts();
+    this.createPostListener = API.graphql(
+      graphqlOperation(onCreatePost)
+    ).subscribe({
+      next: (postData) => {
+        const newPost = postData.value.data.onCreatePost;
+        const prevPosts = this.state.posts.filter(
+          (post) => post.id !== newPost.id
+        );
+        const updatedPosts = [newPost, ...prevPosts];
+        this.setState({ posts: updatedPosts });
+      },
+    });
+  };
 
-    state = {
-        posts: []
-    }
+  componentWillUnmount() {
+    this.createPostListener.unsubscribe();
+  }
 
-    componentDidMount = async () => {
-        this.getPosts()
-    }
-
-    getPosts = async () => {
-        const result = await API.graphql(graphqlOperation(listPosts))
-
-        this.setState({ posts: result.data.listPosts.items })
-    }
-
-
-    render() {
-        const { posts } = this.state
-
-        return posts.map((post) => {
-
-            return (
-                <div className="posts" style={rowStyle} key={post.id}>
-                    <h1> {post.postTitle}</h1>
-                    <span style={{ fontStyle: "italic", color: "#0ca5e297" }}>
-                        {"Wrote by: "} {post.postOwnerUsername}
-
-                        {" on "}
-                        <time style={{ fontStyle: "italic" }}>
-                            {" "}
-                            {new Date(post.createdAt).toDateString()}
-
-                        </time>
-
-                    </span>
-
-                    <p> {post.postBody}</p>
-
-                    <br />
-
-                    <span>
-                        <DeletePost />
-                        <EditPost />
-                    </span>
-
-                </div>
-            )
-
-        })
-    }
+  getPosts = async () => {
+    const result = await API.graphql(graphqlOperation(listPosts));
+    console.log("Todos los Posts", result.data);
+    this.setState({ posts: result.data.listPosts.items });
+  };
+  render() {
+    //const posts=this.state.posts lo de abajo es igual!
+    const { posts } = this.state; // metodo desconstruido!
+    return posts.map((post) => {
+      //retorno un loop agrupando lo de abajo?
+      return (
+        <div className="posts" key={post.id} style={rowStyle}>
+          <h1> {post.postTitle} </h1>{" "}
+          <span style={{ fontStyle: "italic", color: "#0ca5e287" }}>
+            {" "}
+            {"Whrote by: "} {post.postOwnerUsername}{" "}
+            <time> {new Date(post.createdAt).toDateString()} </time>{" "}
+          </span>{" "}
+          <p> {post.postBody} </p> <br> </br>{" "}
+          <span>
+            <DeletePost />
+            <EditPost />
+          </span>{" "}
+        </div>
+      );
+    });
+  }
 }
-
 const rowStyle = {
-    background: '#f4f4f4',
-    padding: '10px',
-    border: '1px #ccc dotted',
-    margin: '14px'
-}
+  background: "#f4f4f4",
+  padding: "10px",
+  border: "1px #ccc dotted",
+  margin: "14px",
+};
 export default DisplayPosts;
