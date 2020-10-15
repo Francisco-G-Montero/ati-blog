@@ -1,30 +1,4 @@
 {
-  "dev": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-atiblog-dev-221911-authRole",
-      "UnauthRoleArn": "arn:aws:iam::197927272485:role/amplify-atiblog-dev-221911-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::197927272485:role/amplify-atiblog-dev-221911-authRole",
-      "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-atiblog-dev-221911-deployment",
-      "UnauthRoleName": "amplify-atiblog-dev-221911-unauthRole",
-      "StackName": "amplify-atiblog-dev-221911",
-      "StackId": "arn:aws:cloudformation:us-east-2:197927272485:stack/amplify-atiblog-dev-221911/9e7b03c0-05df-11eb-a7f9-06e9f06d5ec4",
-      "AmplifyAppId": "d13sb9yqyon9p"
-    }
-  },
-  "ati": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-atiblog-ati-155900-authRole",
-      "UnauthRoleArn": "arn:aws:iam::618351548747:role/amplify-atiblog-ati-155900-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::618351548747:role/amplify-atiblog-ati-155900-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-atiblog-ati-155900-deployment",
-      "UnauthRoleName": "amplify-atiblog-ati-155900-unauthRole",
-      "StackName": "amplify-atiblog-ati-155900",
-      "StackId": "arn:aws:cloudformation:us-east-1:618351548747:stack/amplify-atiblog-ati-155900/557349f0-0998-11eb-8e8a-0ea933ce60ed",
-      "AmplifyAppId": "dnczpk7vn2ug"
-    }
-  },
   "atiblog": {
     "awscloudformation": {
       "AuthRoleName": "amplify-atiblog-atiblog-160438-authRole",
