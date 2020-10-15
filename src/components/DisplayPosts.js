@@ -43,7 +43,7 @@ class DisplayPosts extends Component {
         <div className="posts" key={post.id} style={rowStyle}>
           <h1>{post.postTitle}</h1>
           <span style={{ fontStyle: "italic", color: "#0ca5e287" }}>
-            {"Whrote by: "}
+            {"Wrote by: "}
             {post.postOwnerUsername}
             <time> {new Date(post.createdAt).toDateString()}</time>
           </span>
