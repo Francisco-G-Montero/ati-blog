@@ -1,17 +1,22 @@
-import { API, graphqlOperation } from "aws-amplify";
-import React, { Component } from "react";
-import { createPost } from "../graphql/mutations";
+import { API, graphqlOperation, Auth } from 'aws-amplify';
+import React, { Component } from 'react';
+import { createPost } from '../graphql/mutations';
 
 class CreatePost extends Component {
-  ç;
   state = {
-    postOwnerId: "",
-    postOwnerUsername: "",
-    postTitle: "",
-    postBody: "",
+    postOwnerId: '',
+    postOwnerUsername: '',
+    postTitle: '',
+    postBody: '',
   };
   componentDidMount = async () => {
-    //Todo TBA
+    //Todo: Auth
+    await Auth.currentUserInfo().then((user) => {
+      this.setState({
+        postOwnerId: user.attributes.sub,
+        postOwnerUsername: user.username,
+      });
+    });
   };
   handleChangePost = (event) =>
     this.setState({
@@ -27,14 +32,14 @@ class CreatePost extends Component {
       createdAt: new Date().toISOString(),
     };
     await API.graphql(graphqlOperation(createPost, { input }));
-    this.setState({ postTitle: "", postBody: "" });
+    this.setState({ postTitle: '', postBody: '' });
   };
 
   render() {
     return (
       <form className="add-post" onSubmit={this.handleAddPost}>
         <input
-          style={{ font: "19px" }}
+          style={{ font: '19px' }}
           type="text"
           placeholder="Title"
           name="postTitle"
@@ -55,7 +60,7 @@ class CreatePost extends Component {
         <input
           type="submit"
           className="Btn"
-          style={{ fontSize: "19px" }}
+          style={{ fontSize: '19px' }}
         ></input>
       </form>
     );
