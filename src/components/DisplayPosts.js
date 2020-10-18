@@ -4,10 +4,13 @@ import { API, graphqlOperation } from "aws-amplify"; //nos permite ir a buscar d
 import DeletePost from "./DeletePost";
 import EditPost from "./EditPost";
 import {
+  onCreateComment,
   onCreatePost,
   onDeletePost,
   onUpdatePost,
 } from "../graphql/subscriptions";
+import CreateCommentPost from "./CreateCommentPost";
+import CommentPost from "./CommentPost";
 
 class DisplayPosts extends Component {
   state = {
@@ -57,12 +60,26 @@ class DisplayPosts extends Component {
         this.setState({ posts: updatedPosts });
       },
     });
+    this.createPostCommentListener = API.graphql(graphqlOperation(onCreateComment))
+      .subscribe({
+        next: commentData => {
+          const createdComment = commentData.value.data.onCreateComment;
+          let posts = [... this.state.posts];
+          for( let post of posts ) {
+            if (createdComment.post.id === post.id){
+              post.comments.items.push(createdComment);
+            }
+          }
+          this.setState({ posts })
+        }
+      })
   };
 
   componentWillUnmount() {
     this.createPostListener.unsubscribe();
     this.deletePostListener.unsubscribe();
     this.updatePostListener.unsubscribe();
+    this.createPostCommentListener.unsubscribe();
   }
 
   getPosts = async () => {
@@ -89,6 +106,16 @@ class DisplayPosts extends Component {
           <span>
             <DeletePost data={post} />
             <EditPost {...post} />
+          </span>
+          <span>
+            <CreateCommentPost postId={post.id}/>
+            {post.comments.length > 0 && 
+              <span style={{fontSize:'19px', color:'gray'}}>
+                Comments: </span>}
+                {
+                  post.comments.items.map((comment,index) => 
+                  <CommentPost key={index} commentData={comment}/>)
+                }
           </span>
         </div>
       );
