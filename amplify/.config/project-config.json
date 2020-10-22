@@ -6,12 +6,12 @@
   "version": "3.0",
   "frontend": "javascript",
   "javascript": {
-    "framework": "vue",
+    "framework": "react",
     "config": {
       "SourceDir": "src",
-      "DistributionDir": "dist",
-      "BuildCommand": "",
-      "StartCommand": "npm run serve"
+      "DistributionDir": "build",
+      "BuildCommand": "npm run-script build",
+      "StartCommand": "npm run-script start"
     }
   }
 }
