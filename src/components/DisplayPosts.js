@@ -19,6 +19,8 @@ class DisplayPosts extends Component {
   state = {
     ownerId: "",
     ownerUsername: "",
+    errorMessage: "",
+    postLikedBy: [],
     isHovering: false,
     posts: [],
   };
@@ -123,34 +125,40 @@ class DisplayPosts extends Component {
     for (let post of this.state.posts) {
       if (post.id === postId) {
         if (post.postOwnerUsername === this.state.ownerId) return true;
+
         for (let like of post.likes.items) {
-          if (like.likeOwnerId === this.ownerId) return true;
+          if (like.likeOwnerId === this.state.ownerId) return true;
         }
       }
     }
   };
 
   handleLike = async (postId) => {
-    const input = {
-      numberLikes: 1,
-      likeOwnerId: this.state.ownerId,
-      likeOwnerUsername: this.state.ownerUsername,
-      likePostId: postId,
-    };
-    try {
-      await API.graphql(graphqlOperation(createLike, { input }));
-      //const result = await API.graphql(graphqlOperation(createLike, { input }));
-      //console.log("post likeado: ", result.data);
-    } catch (error) {
-      console.error(error);
+    if (this.likedPost(postId)) {
+      this.setState({ errorMessage: "You can't like your own post" });
+    } else {
+      const input = {
+        numberLikes: 1,
+        likeOwnerId: this.state.ownerId,
+        likeOwnerUsername: this.state.ownerUsername,
+        likePostId: postId,
+      };
+      try {
+        await API.graphql(graphqlOperation(createLike, { input }));
+        //const result = await API.graphql(graphqlOperation(createLike, { input }));
+        //console.log("post likeado: ", result.data);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   render() {
     //const posts=this.state.posts lo de abajo es igual!
     const { posts } = this.state; // metodo desconstruido!
+    let loggedInUser = this.state.ownerId;
+
     return posts.map((post) => {
-      //retorno un loop agrupando lo de abajo?
       return (
         <div className="posts" key={post.id} style={rowStyle}>
           <h1>{post.postTitle}</h1>
@@ -162,9 +170,18 @@ class DisplayPosts extends Component {
           <p>{post.postBody}</p>
           <br></br>
           <span>
-            <DeletePost data={post} />
-            <EditPost {...post} />
+            {post.postOwnerId === loggedInUser && (
+              <>
+                <DeletePost data={post} />
+                <EditPost {...post} />
+              </>
+            )}
             <span>
+              <p className="alert">
+                <strong>
+                  {post.postOwnerId === loggedInUser && this.state.errorMessage}
+                </strong>
+              </p>
               <p onClick={() => this.handleLike(post.id)}>
                 <FaThumbsUp /> {post.likes.items.length}
               </p>
@@ -190,4 +207,5 @@ const rowStyle = {
   border: "1px #ccc dotted",
   margin: "14px",
 };
+
 export default DisplayPosts;
