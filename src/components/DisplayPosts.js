@@ -12,6 +12,8 @@ import {
 } from "../graphql/subscriptions";
 import CreateCommentPost from "./CreateCommentPost";
 import CommentPost from "./CommentPost";
+import { FaThumbsUp } from "react-icons/fa";
+import { createLike } from "../graphql/mutations";
 
 class DisplayPosts extends Component {
   state = {
@@ -96,7 +98,7 @@ class DisplayPosts extends Component {
         let posts = [...this.state.posts];
         for (let post of posts) {
           if (createdLike.post.id === post.id) {
-            post.likes.items.post(createdLike);
+            post.likes.items.push(createdLike);
           }
         }
         this.setState({ posts });
@@ -128,6 +130,22 @@ class DisplayPosts extends Component {
     }
   };
 
+  handleLike = async (postId) => {
+    const input = {
+      numberLikes: 1,
+      likeOwnerId: this.state.ownerId,
+      likeOwnerUsername: this.state.ownerUsername,
+      likePostId: postId,
+    };
+    try {
+      await API.graphql(graphqlOperation(createLike, { input }));
+      //const result = await API.graphql(graphqlOperation(createLike, { input }));
+      //console.log("post likeado: ", result.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   render() {
     //const posts=this.state.posts lo de abajo es igual!
     const { posts } = this.state; // metodo desconstruido!
@@ -146,6 +164,11 @@ class DisplayPosts extends Component {
           <span>
             <DeletePost data={post} />
             <EditPost {...post} />
+            <span>
+              <p onClick={() => this.handleLike(post.id)}>
+                <FaThumbsUp /> {post.likes.items.length}
+              </p>
+            </span>
           </span>
           <span>
             <CreateCommentPost postId={post.id} />
