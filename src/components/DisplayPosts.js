@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { listPosts } from "../graphql/queries";
-import { API, graphqlOperation } from "aws-amplify"; //nos permite ir a buscar de la API las queries o mutations de aws
+import { API, Auth, graphqlOperation } from "aws-amplify"; //nos permite ir a buscar de la API las queries o mutations de aws
 import DeletePost from "./DeletePost";
 import EditPost from "./EditPost";
 import {
   onCreateComment,
+  onCreateLike,
   onCreatePost,
   onDeletePost,
   onUpdatePost,
@@ -14,10 +15,20 @@ import CommentPost from "./CommentPost";
 
 class DisplayPosts extends Component {
   state = {
+    ownerId: "",
+    ownerUsername: "",
+    isHovering: false,
     posts: [],
   };
   componentDidMount = async () => {
     this.getPosts();
+
+    await Auth.currentUserInfo().then((user) => {
+      this.setState({
+        ownerId: user.attributes.sub,
+        ownerUsername: user.username,
+      });
+    });
 
     this.createPostListener = API.graphql(
       graphqlOperation(onCreatePost)
@@ -43,6 +54,7 @@ class DisplayPosts extends Component {
         this.setState({ posts: updatedPosts });
       },
     });
+
     this.updatePostListener = API.graphql(
       graphqlOperation(onUpdatePost)
     ).subscribe({
@@ -60,19 +72,36 @@ class DisplayPosts extends Component {
         this.setState({ posts: updatedPosts });
       },
     });
-    this.createPostCommentListener = API.graphql(graphqlOperation(onCreateComment))
-      .subscribe({
-        next: commentData => {
-          const createdComment = commentData.value.data.onCreateComment;
-          let posts = [... this.state.posts];
-          for( let post of posts ) {
-            if (createdComment.post.id === post.id){
-              post.comments.items.push(createdComment);
-            }
+
+    this.createPostCommentListener = API.graphql(
+      graphqlOperation(onCreateComment)
+    ).subscribe({
+      next: (commentData) => {
+        const createdComment = commentData.value.data.onCreateComment;
+        let posts = [...this.state.posts];
+        for (let post of posts) {
+          if (createdComment.post.id === post.id) {
+            post.comments.items.push(createdComment);
           }
-          this.setState({ posts })
         }
-      })
+        this.setState({ posts });
+      },
+    });
+
+    this.createPostLikeListener = API.graphql(
+      graphqlOperation(onCreateLike)
+    ).subscribe({
+      next: (postData) => {
+        const createdLike = postData.value.data.onCreateLike;
+        let posts = [...this.state.posts];
+        for (let post of posts) {
+          if (createdLike.post.id === post.id) {
+            post.likes.items.post(createdLike);
+          }
+        }
+        this.setState({ posts });
+      },
+    });
   };
 
   componentWillUnmount() {
@@ -80,12 +109,23 @@ class DisplayPosts extends Component {
     this.deletePostListener.unsubscribe();
     this.updatePostListener.unsubscribe();
     this.createPostCommentListener.unsubscribe();
+    this.createPostLikeListener.unsubscribe();
   }
 
   getPosts = async () => {
     const result = await API.graphql(graphqlOperation(listPosts));
-    console.log("Todos los Posts", result.data);
     this.setState({ posts: result.data.listPosts.items });
+  };
+
+  likedPost = (postId) => {
+    for (let post of this.state.posts) {
+      if (post.id === postId) {
+        if (post.postOwnerUsername === this.state.ownerId) return true;
+        for (let like of post.likes.items) {
+          if (like.likeOwnerId === this.ownerId) return true;
+        }
+      }
+    }
   };
 
   render() {
@@ -108,14 +148,13 @@ class DisplayPosts extends Component {
             <EditPost {...post} />
           </span>
           <span>
-            <CreateCommentPost postId={post.id}/>
-            {post.comments.length > 0 && 
-              <span style={{fontSize:'19px', color:'gray'}}>
-                Comments: </span>}
-                {
-                  post.comments.items.map((comment,index) => 
-                  <CommentPost key={index} commentData={comment}/>)
-                }
+            <CreateCommentPost postId={post.id} />
+            {post.comments.length > 0 && (
+              <span style={{ fontSize: "19px", color: "gray" }}>Comments:</span>
+            )}
+            {post.comments.items.map((comment, index) => (
+              <CommentPost key={index} commentData={comment} />
+            ))}
           </span>
         </div>
       );
