@@ -14,7 +14,7 @@ import CreateCommentPost from "./CreateCommentPost";
 import CommentPost from "./CommentPost";
 import { FaSadTear, FaThumbsUp } from "react-icons/fa";
 import { createLike } from "../graphql/mutations";
-import UsersWhoLikedPost from '../components/UsersWhoLikedPost'
+import UsersWhoLikedPost from "../components/UsersWhoLikedPost";
 
 class DisplayPosts extends Component {
   state = {
@@ -25,6 +25,7 @@ class DisplayPosts extends Component {
     isHovering: false,
     posts: [],
   };
+
   componentDidMount = async () => {
     this.getPosts();
 
@@ -125,7 +126,7 @@ class DisplayPosts extends Component {
   likedPost = (postId) => {
     for (let post of this.state.posts) {
       if (post.id === postId) {
-        if (post.postOwnerUsername === this.state.ownerId) return true;
+        if (post.postOwnerId === this.state.ownerId) return true;
 
         for (let like of post.likes.items) {
           if (like.likeOwnerId === this.state.ownerId) return true;
