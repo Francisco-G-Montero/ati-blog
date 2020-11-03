@@ -190,18 +190,6 @@ class DisplayPosts extends Component {
               >
                 <FaThumbsUp /> {post.likes.items.length}
               </p>
-              {this.state.isHovering && (
-                <div className="users-liked">
-                  {this.state.postLikedBy.length === 0
-                    ? "Liked by No one"
-                    : "Liked by:"}
-                  {this.state.postLikedBy.length === 0 ? (
-                    <FaSadTear />
-                  ) : (
-                    <UsersWhoLikedPost data={this.state.postLikedBy} />
-                  )}
-                </div>
-              )}
             </span>
           </span>
           <span>
