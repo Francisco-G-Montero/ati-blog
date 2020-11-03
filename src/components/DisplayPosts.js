@@ -24,6 +24,7 @@ class DisplayPosts extends Component {
     isHovering: false,
     posts: [],
   };
+
   componentDidMount = async () => {
     this.getPosts();
 
@@ -124,7 +125,7 @@ class DisplayPosts extends Component {
   likedPost = (postId) => {
     for (let post of this.state.posts) {
       if (post.id === postId) {
-        if (post.postOwnerUsername === this.state.ownerId) return true;
+        if (post.postOwnerId === this.state.ownerId) return true;
 
         for (let like of post.likes.items) {
           if (like.likeOwnerId === this.state.ownerId) return true;
