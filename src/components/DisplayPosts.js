@@ -164,9 +164,9 @@ class DisplayPosts extends Component {
         <div className="posts" key={post.id} style={rowStyle}>
           <h1>{post.postTitle}</h1>
           <span style={{ fontStyle: "italic", color: "#0ca5e287" }}>
-            {"Wrote by: "}
-            {post.postOwnerUsername}
-            <time> {new Date(post.createdAt).toDateString()}</time>
+            {"Escrito por: "}
+            {post.postOwnerUsername}{", "}
+            <time> {new Date(post.createdAt).toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' })}</time>
           </span>
           <p>{post.postBody}</p>
           <br></br>

@@ -13,7 +13,7 @@ class DeletePost extends Component {
         onClick={() => this.handleDeletePost(post.id)}
         style={{ border: "none" }}
       >
-        Delete
+        Borrar post
       </button>
     );
   }

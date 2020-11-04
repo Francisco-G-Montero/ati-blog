@@ -37,11 +37,11 @@ class CreateCommentPost extends Component {
                 <form className="add-comment" onSubmit={this.handleAddComment}>
                     <textarea type="text" name="content" 
                                 rows="3" cols="40" requider
-                                placeholder="Add Your Comment..."
+                                placeholder="Escribir comentario..."
                                 value={this.state.content}
                                 onChange={this.handleChangeContent}/>
 
-                    <input className="btn" type="submit" style={{fontSize: '19px'}} value="Add Comment"/>
+                    <input className="btn" type="submit" style={{fontSize: '19px'}} value="Añadir comentario"/>
                 </form>
             </div>
         )

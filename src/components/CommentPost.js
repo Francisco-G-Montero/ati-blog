@@ -6,11 +6,12 @@ class CommentPost extends Component{
         return (
             <div className="comment">
                 <span style={{ fontStyle: "italic", color: "#0ca5e297"}}>
-                    {"Comment by: "}{commentOwnerUsername}
+                    {"Por: "}{commentOwnerUsername}
                     {" on "}
                     <time style={{fontStyle: "italic"}}>
                         {" "}
-                        {new Date(createdAt).toDateString()}
+                        
+                        {new Date(createdAt).toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' })}
                     </time>
                 </span>
                 <p>{content}</p>

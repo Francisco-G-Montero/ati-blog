@@ -87,7 +87,7 @@ class EditPost extends Component {
                 value={this.state.postData.postBody}
                 onChange={this.handleBody}
               />
-              <button>Update Post</button>
+              <button>Editar Post</button>
             </form>
           </div>
         )}
