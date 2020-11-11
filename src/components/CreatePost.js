@@ -35,7 +35,7 @@ class CreatePost extends Component {
     };
     await API.graphql(graphqlOperation(createPost, { input }))
       .then(async (dataPost)=>{
-       // this.saveImage(dataPost)
+        this.saveImage(dataPost)
     });
     this.setState({ postTitle: '', postBody: '' });
   };
@@ -60,12 +60,12 @@ class CreatePost extends Component {
       }).catch(err=>{
         console.log('Hubo un error al guardar la imagen al Storage',err)
       })
-      const imageInput = {
+      const input = {
         imageName:path,
         imageUrl:path,
         imagePostId:dataPost.data.createPost.id,
       }
-      await API.graphql(graphqlOperation(createImage, { imageInput })).then(()=>{console.log('post e imagen cargados exitosamente')});
+      await API.graphql(graphqlOperation(createImage, { input })).then(()=>{console.log('post e imagen cargados exitosamente')});
   }
   
   render() {

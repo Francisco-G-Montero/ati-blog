@@ -32,7 +32,17 @@ export const getPost = /* GraphQL */ `
         }
         nextToken
       }
-      
+      images {
+        items {
+          id
+          imageName
+          imageUrl
+          imagePostId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -52,23 +62,30 @@ export const listPosts = /* GraphQL */ `
         postBody
         createdAt
         comments {
-          items{
-            id
-            commentOwnerId
-            commentOwnerUsername
-            content
-            createdAt
-          }
+          items {
+          id
+          commentOwnerId
+          commentOwnerUsername
+          content
+          createdAt
+          updatedAt
+        }
+          nextToken
         }
         likes {
-          items{
-            id
-            numberLikes
-            likeOwnerId
-            likeOwnerUsername
-          }
+          items {
+          id
+          numberLikes
+          likeOwnerId
+          likeOwnerUsername
+          createdAt
+          updatedAt
         }
-    
+          nextToken
+        }
+        images {
+          nextToken
+        }
         updatedAt
       }
       nextToken
@@ -82,43 +99,19 @@ export const getComment = /* GraphQL */ `
       commentOwnerId
       commentOwnerUsername
       post {
-          id
+        id
         postOwnerId
         postOwnerUsername
         postTitle
         postBody
         createdAt
         comments {
-          items {
-            id
-            commentOwnerId
-            commentOwnerUsername
-            content
-            createdAt
-            updatedAt
-          }
           nextToken
         }
         likes {
-          items {
-            id
-            numberLikes
-            likeOwnerId
-            likeOwnerUsername
-            createdAt
-            updatedAt
-          }
           nextToken
         }
         images {
-          items {
-            id
-            imageName
-            imageUrl
-            imagePostId
-            createdAt
-            updatedAt
-          }
           nextToken
         }
         updatedAt

@@ -119,7 +119,7 @@ class DisplayPosts extends Component {
 
   getPosts = async () => {
     const result = await API.graphql(graphqlOperation(listPosts));
-    //console.log('todos los posts',result.data.listPosts.items )
+    console.log('todos los posts',result.data.listPosts.items )
     this.setState({ posts: result.data.listPosts.items });
   };
 
