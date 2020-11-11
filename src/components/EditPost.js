@@ -138,7 +138,7 @@ class EditPost extends Component {
                 onChange={this.handleBody}
               />
                <input type="file" onChange={this.handleChange} accept="image/x-png,image/gif,image/jpeg,image/png"/>
-              <img src={this.state.storageImg.fileUrl} alt="postImage" onChange={this.handleImage} style={{height:'200px',width:'400px'}}/>
+              <img src={this.state.storageImg.fileUrl} alt="postImage" onChange={this.handleImage} style={{height:'200px',width:'auto'}}/>
 
               <button onClick={this.saveFile}>Guardar imagen</button>
 
