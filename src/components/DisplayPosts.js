@@ -78,8 +78,8 @@ class DisplayPosts extends Component {
           updatePost,
           ...posts.slice(index + 1),
         ];
-        console.log('postUpdateado',updatePost)
-        this.postImage.current.setState({storageImg:{fileUrl:updatePost.images.items[0].imageName}})
+      //  console.log('postUpdateado',updatePost)
+        //this.postImage.current.setState({storageImg:{fileUrl:updatePost.images.items[0].imageName}})
         this.setState({ posts: updatedPosts });
       },
     });
@@ -170,6 +170,9 @@ class DisplayPosts extends Component {
       return (
         <div className="posts" key={post.id} style={rowStyle}>
           <h1>{post.postTitle}</h1>
+          {post.images.items.map((image, index) => (
+              <ImagePost ref={this.postImage}  key={index} imageData={image} />
+            ))}
           <span style={{ fontStyle: "italic", color: "#0ca5e287" }}>
             {"Escrito por: "}
             {post.postOwnerUsername}{", "}
@@ -177,6 +180,7 @@ class DisplayPosts extends Component {
           </span>
           <text>{post.postBody}</text>
           <br></br>
+        
           <span>
             {post.postOwnerId === loggedInUser && (
               <>
@@ -202,9 +206,7 @@ class DisplayPosts extends Component {
           {post.images.length > 0 && (
               <span style={{ fontSize: "19px", color: "gray" }}>Imagen de post:</span>
             )}
-            {post.images.items.map((image, index) => (
-              <ImagePost ref={this.postImage}  key={index} imageData={image} />
-            ))}
+           
           <span>
             <CreateCommentPost postId={post.id} />
             {post.comments.length > 0 && (

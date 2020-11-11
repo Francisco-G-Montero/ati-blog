@@ -2,6 +2,7 @@ import { API, graphqlOperation, Auth } from 'aws-amplify';
 import React, { Component } from 'react';
 import { createPost,createImage } from '../graphql/mutations';
 import {Storage} from 'aws-amplify'
+import { FaWindows } from 'react-icons/fa';
 
 class CreatePost extends Component {
   
@@ -24,7 +25,8 @@ class CreatePost extends Component {
         postOwnerUsername: user.username,
       });
     });
-  };
+  };z
+
   handleChangePost = (event) =>
     this.setState({
       [event.target.name]: event.target.value,
@@ -41,8 +43,9 @@ class CreatePost extends Component {
     await API.graphql(graphqlOperation(createPost, { input }))
       .then(async (dataPost)=>{
         this.saveImage(dataPost)
+         this.setState({ postTitle: '', postBody: '' });
     });
-    this.setState({ postTitle: '', postBody: '' });
+   
   };
 
   handleImageChange= e=>{
@@ -59,7 +62,7 @@ class CreatePost extends Component {
   saveImage= async (dataPost)=>{
     const file= this.state.storageImg.file
     const path=this.state.storageImg.filename
-    Storage.put(path,file)
+    await Storage.put(path,file)
       .then(async ()=>{
         console.log('La imagen ha sido guardada al Storage exitosamente')
         this.setState({storageImg:{fileUrl:'',file:'',filename:''}})
@@ -70,6 +73,8 @@ class CreatePost extends Component {
         }
         await API.graphql(graphqlOperation(createImage, { input })).then(()=>{console.log('post e imagen cargados exitosamente')});
         this.postImage.current.hidden=true
+        window.location.href = "/"
+
       }).catch(err=>{
         console.log('Hubo un error al guardar la imagen al Storage',err)
       })
