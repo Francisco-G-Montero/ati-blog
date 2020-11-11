@@ -78,8 +78,10 @@ class DisplayPosts extends Component {
           updatePost,
           ...posts.slice(index + 1),
         ];
-        console.log('postUpdateado',updatePost)
-        this.postImage.current.setState({storageImg:{fileUrl:updatePost.images.items[0].imageName}})
+        console.log("postUpdateado", updatePost);
+        this.postImage.current.setState({
+          storageImg: { fileUrl: updatePost.images.items[0].imageName },
+        });
         this.setState({ posts: updatedPosts });
       },
     });
@@ -125,7 +127,7 @@ class DisplayPosts extends Component {
 
   getPosts = async () => {
     const result = await API.graphql(graphqlOperation(listPosts));
-    console.log('todos los posts',result.data.listPosts.items )
+    console.log("todos los posts", result.data.listPosts.items);
     this.setState({ posts: result.data.listPosts.items });
   };
 
@@ -172,8 +174,16 @@ class DisplayPosts extends Component {
           <h1>{post.postTitle}</h1>
           <span style={{ fontStyle: "italic", color: "#0ca5e287" }}>
             {"Escrito por: "}
-            {post.postOwnerUsername}{", "}
-            <time> {new Date(post.createdAt).toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            {post.postOwnerUsername}
+            {", "}
+            <time>
+              {" "}
+              {new Date(post.createdAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
           </span>
           <text>{post.postBody}</text>
           <br></br>
@@ -200,11 +210,13 @@ class DisplayPosts extends Component {
             </span>
           </span>
           {post.images.length > 0 && (
-              <span style={{ fontSize: "19px", color: "gray" }}>Imagen de post:</span>
-            )}
-            {post.images.items.map((image, index) => (
-              <ImagePost ref={this.postImage}  key={index} imageData={image} />
-            ))}
+            <span style={{ fontSize: "19px", color: "gray" }}>
+              Imagen de post:
+            </span>
+          )}
+          {post.images.items.map((image, index) => (
+            <ImagePost ref={this.postImage} key={index} imageData={image} />
+          ))}
           <span>
             <CreateCommentPost postId={post.id} />
             {post.comments.length > 0 && (
