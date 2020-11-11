@@ -12,6 +12,7 @@ import {
 } from "../graphql/subscriptions";
 import CreateCommentPost from "./CreateCommentPost";
 import CommentPost from "./CommentPost";
+import ImagePost from "./ImagePost";
 import { FaThumbsUp } from "react-icons/fa";
 import { createLike } from "../graphql/mutations";
 
@@ -169,7 +170,7 @@ class DisplayPosts extends Component {
             {post.postOwnerUsername}{", "}
             <time> {new Date(post.createdAt).toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' })}</time>
           </span>
-          <p>{post.postBody}</p>
+          <text>{post.postBody}</text>
           <br></br>
           <span>
             {post.postOwnerId === loggedInUser && (
@@ -193,6 +194,12 @@ class DisplayPosts extends Component {
               </p>
             </span>
           </span>
+          {post.images.length > 0 && (
+              <span style={{ fontSize: "19px", color: "gray" }}>Imagen de post:</span>
+            )}
+            {post.images.items.map((image, index) => (
+              <ImagePost key={index} imageData={image} />
+            ))}
           <span>
             <CreateCommentPost postId={post.id} />
             {post.comments.length > 0 && (

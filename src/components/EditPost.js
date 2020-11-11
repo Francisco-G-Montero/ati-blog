@@ -2,6 +2,7 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import React, { Component } from "react";
 import { updatePost } from "../graphql/mutations";
 import {Storage} from 'aws-amplify'
+import ImagePost from "./ImagePost";
 
 class EditPost extends Component {
  // stateImg= {fileUrl:'',file:'', filename:''}
@@ -38,9 +39,8 @@ class EditPost extends Component {
       postTitle: this.props.postTitle,
       postBody: this.props.postBody,
     },
-    storageImg:{fileUrl:'',file:'', filename:''}
+    storageImg:{fileUrl:'',file:'', filename:this.props.images.items.imageName}
   };
-
   handleModal = () => {
     this.setState({ show: !this.state.show });
     document.body.scrollTop = 0;
@@ -61,6 +61,7 @@ class EditPost extends Component {
   };
 
   handleTitle = (event) => {
+
     this.setState({
       postData: {
         ...this.state.postData,
@@ -78,14 +79,16 @@ class EditPost extends Component {
   };
 
   componentDidMount = async () =>{
-    Storage.get('Victoria.png')
-    .then(data => {
-      this.setState({
-        storageImg:{fileUrl:data}
+    if(this.props.images.items[0]){
+      Storage.get(this.props.images.items[0].imageName)
+      .then(data => {
+        this.setState({
+          storageImg:{fileUrl:data}
+        })
+      console.log('asdasd',)
+  
       })
-      
-    console.log('hola',data)
-    })
+    }
   }
   componentWillMount = async () => {
    
@@ -125,11 +128,13 @@ class EditPost extends Component {
                 onChange={this.handleBody}
               />
                <input type="file" onChange={this.handleChange} accept="image/x-png,image/gif,image/jpeg,image/png"/>
-              <img src={this.state.storageImg.fileUrl} alt="postImage" onChange={this.handleImage} style={{height:'200px',width:'auto'}}/>
+               {this.props.images.items.map((image, index) => ( 
+              <ImagePost key={index} imageData={image} />
+               ))}
 
-              <button onClick={this.saveFile}>Guardar imagen</button>
+          
 
-              <button>Editar Post</button>
+              <button onClick={this.saveFile}>Editar Post</button>
              
             </form>
         

@@ -74,17 +74,24 @@ export const listPosts = /* GraphQL */ `
         }
         likes {
           items {
-          id
-          numberLikes
-          likeOwnerId
-          likeOwnerUsername
-          createdAt
-          updatedAt
-        }
+            id
+            numberLikes
+            likeOwnerId
+            likeOwnerUsername
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         images {
-          nextToken
+          items {
+            id
+            imageName
+            imageUrl
+            imagePostId
+            createdAt
+            updatedAt
+          }
         }
         updatedAt
       }

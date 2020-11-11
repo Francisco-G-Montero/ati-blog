@@ -72,7 +72,7 @@ input[type="submit"]:hover {
 }
 
 .posts div {
-    box-shadow: 1px 1px 1px rgb(182, 235, 171);
+    box-shadow: 1px 1px 1px rgb(189, 216, 255);
     padding: 0.5rem;
     margin: 0.6rem;
     background-color: white;
@@ -97,7 +97,19 @@ input[type="submit"]:hover {
     box-shadow: 4px 4px 4px rgb(114, 116, 114);
     animation: move 0.2s backwards;
 }
-
+.imagePost{
+    transform: none;
+    transition: 0.1s;
+    box-shadow: 0px 0px  10px rgba(0, 0, 0, 0.5);
+}
+.imagePost:hover{
+    -webkit-filter: grayscale(30%);
+    -moz-filter: grayscale(30%);
+    -ms-filter: grayscale(30%);
+    -o-filter: grayscale(30%);
+    transform: scale(1.05);
+    transition: 0.4s;
+}
 div {
     border-radius: 5px;
     background-color: #f2f2f2;
@@ -138,8 +150,9 @@ div {
 }
 
 .close {
-    width: 40px;
-    border-radius: 150px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
     float: right;
 }
 
