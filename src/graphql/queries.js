@@ -32,6 +32,7 @@ export const getPost = /* GraphQL */ `
         }
         nextToken
       }
+      
       updatedAt
     }
   }
@@ -67,6 +68,7 @@ export const listPosts = /* GraphQL */ `
             likeOwnerUsername
           }
         }
+    
         updatedAt
       }
       nextToken
@@ -80,16 +82,43 @@ export const getComment = /* GraphQL */ `
       commentOwnerId
       commentOwnerUsername
       post {
-        id
+          id
         postOwnerId
         postOwnerUsername
         postTitle
         postBody
         createdAt
         comments {
+          items {
+            id
+            commentOwnerId
+            commentOwnerUsername
+            content
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         likes {
+          items {
+            id
+            numberLikes
+            likeOwnerId
+            likeOwnerUsername
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        images {
+          items {
+            id
+            imageName
+            imageUrl
+            imagePostId
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -148,6 +177,9 @@ export const getLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        images {
+          nextToken
+        }
         updatedAt
       }
       createdAt
@@ -167,6 +199,64 @@ export const listLikes = /* GraphQL */ `
         numberLikes
         likeOwnerId
         likeOwnerUsername
+        post {
+          id
+          postOwnerId
+          postOwnerUsername
+          postTitle
+          postBody
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getImage = /* GraphQL */ `
+  query GetImage($id: ID!) {
+    getImage(id: $id) {
+      id
+      imageName
+      imageUrl
+      imagePostId
+      post {
+        id
+        postOwnerId
+        postOwnerUsername
+        postTitle
+        postBody
+        createdAt
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        images {
+          nextToken
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listImages = /* GraphQL */ `
+  query ListImages(
+    $filter: ModelImageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listImages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        imageName
+        imageUrl
+        imagePostId
         post {
           id
           postOwnerId

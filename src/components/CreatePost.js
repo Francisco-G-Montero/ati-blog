@@ -1,6 +1,7 @@
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import React, { Component } from 'react';
-import { createPost } from '../graphql/mutations';
+import { createPost,createImage } from '../graphql/mutations';
+import {Storage} from 'aws-amplify'
 
 class CreatePost extends Component {
   state = {
@@ -8,6 +9,7 @@ class CreatePost extends Component {
     postOwnerUsername: '',
     postTitle: '',
     postBody: '',
+    storageImg:{fileUrl:'',file:'', filename:''}
   };
   componentDidMount = async () => {
     //Todo: Auth
@@ -31,10 +33,41 @@ class CreatePost extends Component {
       postBody: this.state.postBody,
       createdAt: new Date().toISOString(),
     };
-    await API.graphql(graphqlOperation(createPost, { input }));
+    await API.graphql(graphqlOperation(createPost, { input }))
+      .then(async (dataPost)=>{
+       // this.saveImage(dataPost)
+    });
     this.setState({ postTitle: '', postBody: '' });
   };
 
+  handleImageChange= e=>{
+    const file =e.target.files[0];
+    this.setState(({
+      storageImg:{
+          fileUrl: URL.createObjectURL(file),
+          file,
+          filename: file.name
+        }
+    }))
+  }
+  saveImage=async (dataPost)=>{
+    const file= this.state.storageImg.file
+    const path=this.state.storageImg.filename
+    Storage.put(path,file)
+      .then(()=>{
+        console.log('La imagen ha sido guardada al Storage exitosamente')
+        this.setState({storageImg:{fileUrl:'',file:'',filename:''}})
+      }).catch(err=>{
+        console.log('Hubo un error al guardar la imagen al Storage',err)
+      })
+      const imageInput = {
+        imageName:path,
+        imageUrl:path,
+        imagePostId:dataPost.data.createPost.id,
+      }
+      await API.graphql(graphqlOperation(createImage, { imageInput })).then(()=>{console.log('post e imagen cargados exitosamente')});
+  }
+  
   render() {
     return (
       <form className="add-post" onSubmit={this.handleAddPost}>
@@ -57,6 +90,9 @@ class CreatePost extends Component {
           value={this.state.postBody}
           onChange={this.handleChangePost}
         />
+          <input type="file" onChange={this.handleImageChange} accept="image/x-png,image/gif,image/jpeg,image/png"/>
+          <img src={this.state.storageImg.fileUrl} alt="postImage" onChange={this.handleImage} style={{height:'200px',width:'auto'}}/>
+
         <input
           type="submit"
           className="Btn"

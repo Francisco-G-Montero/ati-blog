@@ -3,9 +3,6 @@ import React, { Component } from "react";
 import { updatePost } from "../graphql/mutations";
 import {Storage} from 'aws-amplify'
 
-  console.log('cargando imagen0')
-  let imageUrl =Storage.get('public/550x733_0BA.jpg')
-
 class EditPost extends Component {
  // stateImg= {fileUrl:'',file:'', filename:''}
   handleChange= e=>{
@@ -79,17 +76,7 @@ class EditPost extends Component {
       },
     });
   };
-   /*handleImage(){
-    console.log('cargando imagen0')
-    let imageUrl =Storage.get('public/550x733_0BA.jpg')
-    this.setState({
-      storageImg:{fileUrl:imageUrl}
-    })
-    console.log('cargando imagen',imageUrl)
-  }
-  asd(){
-    console.log('cargando imagen0')
-  }*/
+
   componentDidMount = async () =>{
     Storage.get('Victoria.png')
     .then(data => {

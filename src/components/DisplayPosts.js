@@ -12,7 +12,7 @@ import {
 } from "../graphql/subscriptions";
 import CreateCommentPost from "./CreateCommentPost";
 import CommentPost from "./CommentPost";
-import { FaSadTear, FaThumbsUp } from "react-icons/fa";
+import { FaThumbsUp } from "react-icons/fa";
 import { createLike } from "../graphql/mutations";
 
 class DisplayPosts extends Component {
@@ -119,6 +119,7 @@ class DisplayPosts extends Component {
 
   getPosts = async () => {
     const result = await API.graphql(graphqlOperation(listPosts));
+    //console.log('todos los posts',result.data.listPosts.items )
     this.setState({ posts: result.data.listPosts.items });
   };
 

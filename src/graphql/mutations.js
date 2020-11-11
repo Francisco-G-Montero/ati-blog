@@ -35,6 +35,17 @@ export const createPost = /* GraphQL */ `
         }
         nextToken
       }
+      images {
+        items {
+          id
+          imageName
+          imageUrl
+          imagePostId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -68,6 +79,17 @@ export const updatePost = /* GraphQL */ `
           numberLikes
           likeOwnerId
           likeOwnerUsername
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      images {
+        items {
+          id
+          imageName
+          imageUrl
+          imagePostId
           createdAt
           updatedAt
         }
@@ -111,6 +133,17 @@ export const deletePost = /* GraphQL */ `
         }
         nextToken
       }
+      images {
+        items {
+          id
+          imageName
+          imageUrl
+          imagePostId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -135,6 +168,9 @@ export const createComment = /* GraphQL */ `
           nextToken
         }
         likes {
+          nextToken
+        }
+        images {
           nextToken
         }
         updatedAt
@@ -167,6 +203,9 @@ export const updateComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        images {
+          nextToken
+        }
         updatedAt
       }
       content
@@ -195,6 +234,9 @@ export const deleteComment = /* GraphQL */ `
           nextToken
         }
         likes {
+          nextToken
+        }
+        images {
           nextToken
         }
         updatedAt
@@ -228,6 +270,9 @@ export const createLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        images {
+          nextToken
+        }
         updatedAt
       }
       createdAt
@@ -258,6 +303,9 @@ export const updateLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        images {
+          nextToken
+        }
         updatedAt
       }
       createdAt
@@ -286,6 +334,108 @@ export const deleteLike = /* GraphQL */ `
           nextToken
         }
         likes {
+          nextToken
+        }
+        images {
+          nextToken
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createImage = /* GraphQL */ `
+  mutation CreateImage(
+    $input: CreateImageInput!
+    $condition: ModelImageConditionInput
+  ) {
+    createImage(input: $input, condition: $condition) {
+      id
+      imageName
+      imageUrl
+      imagePostId
+      post {
+        id
+        postOwnerId
+        postOwnerUsername
+        postTitle
+        postBody
+        createdAt
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        images {
+          nextToken
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateImage = /* GraphQL */ `
+  mutation UpdateImage(
+    $input: UpdateImageInput!
+    $condition: ModelImageConditionInput
+  ) {
+    updateImage(input: $input, condition: $condition) {
+      id
+      imageName
+      imageUrl
+      imagePostId
+      post {
+        id
+        postOwnerId
+        postOwnerUsername
+        postTitle
+        postBody
+        createdAt
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        images {
+          nextToken
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteImage = /* GraphQL */ `
+  mutation DeleteImage(
+    $input: DeleteImageInput!
+    $condition: ModelImageConditionInput
+  ) {
+    deleteImage(input: $input, condition: $condition) {
+      id
+      imageName
+      imageUrl
+      imagePostId
+      post {
+        id
+        postOwnerId
+        postOwnerUsername
+        postTitle
+        postBody
+        createdAt
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        images {
           nextToken
         }
         updatedAt
