@@ -1,33 +1,17 @@
 import { API, Auth, graphqlOperation } from "aws-amplify";
 import React, { Component } from "react";
-import { updatePost } from "../graphql/mutations";
+import { updateImage, updatePost, createImage } from "../graphql/mutations";
 import {Storage} from 'aws-amplify'
 import ImagePost from "./ImagePost";
+import AwesomeComponent from "./AwesomeComponent ";
 
 class EditPost extends Component {
- // stateImg= {fileUrl:'',file:'', filename:''}
-  handleChange= e=>{
-    const file =e.target.files[0];
-    this.setState(({
-      storageImg:{
-          fileUrl: URL.createObjectURL(file),
-          file,
-          filename: file.name
-        }
-    }))
+  constructor(props) {
+    super(props);
+    this.postImage = React.createRef();
+    this.loadingBar = React.createRef();
   }
-  saveFile=()=>{
-    Storage.put(this.state.storageImg.filename,this.state.storageImg.file)
-      .then(()=>{
-        console.log('La imagen ha sido guardada exitosamente')
-        this.setState({storageImg:{fileUrl:'',file:'',filename:''}})
-      }).catch(err=>{
-        console.log('Hubo un error al guardar la imagen',err)
-      })
-  }
-
-
-
+  
   state = {
     show: false,
     id: "",
@@ -41,6 +25,64 @@ class EditPost extends Component {
     },
     storageImg:{fileUrl:'',file:'', filename:this.props.images.items.imageName}
   };
+
+  handleChange= e=>{
+    const file =e.target.files[0];
+    this.setState(({
+      storageImg:{
+          fileUrl: URL.createObjectURL(file),
+          file,
+          filename: file.name
+        }
+    }))
+    this.postImage.current.setState({storageImg:{fileUrl:URL.createObjectURL(file)}})
+  }
+  
+  saveImage=()=>{
+    const file= this.state.storageImg.file
+    const path=this.state.storageImg.filename
+  
+    Storage.put(path,file)
+      .then(async ()=>{
+        console.log('La imagen ha sido guardada al Storage exitosamente')
+        this.setState({storageImg:{fileUrl:'',file:'',filename:''}})
+        if(this.props.images.items[0]){
+          const input = {
+            id: this.props.images.items[0].id,
+            imageName:path,
+            imageUrl:path,
+          };
+           API.graphql(graphqlOperation(updateImage, { input })).then(()=>{
+            console.log('imagen editada exitosamente')
+            this.updatePost()
+          });
+
+        }else{
+          const input = {
+            imageName:path,
+            imageUrl:path,
+            imagePostId:this.props.id,
+          };
+          API.graphql(graphqlOperation(createImage, { input })).then(()=>{console.log('imagen creada exitosamente')});
+          this.updatePost()
+        }
+      }).catch(err=>{
+        console.log('Hubo un error al guardar la imagen al Storage',err)
+      })
+  }
+  updatePost=()=>{
+    const input = {
+      id: this.props.id,
+      postOwnerId: this.state.postOwnerId,
+      postOwnerUsername: this.state.postOwnerUsername,
+      postTitle: this.state.postData.postTitle,
+      postBody: this.state.postData.postBody,
+    };
+    API.graphql(graphqlOperation(updatePost, { input })).then(()=>{
+      this.setState({ show: !this.state.show });
+    });
+  }
+
   handleModal = () => {
     this.setState({ show: !this.state.show });
     document.body.scrollTop = 0;
@@ -49,15 +91,8 @@ class EditPost extends Component {
 
   handleUpdatePost = async (event) => {
     event.preventDefault();
-    const input = {
-      id: this.props.id,
-      postOwnerId: this.state.postOwnerId,
-      postOwnerUsername: this.state.postOwnerUsername,
-      postTitle: this.state.postData.postTitle,
-      postBody: this.state.postData.postBody,
-    };
-    await API.graphql(graphqlOperation(updatePost, { input }));
-    this.setState({ show: !this.state.show });
+    this.loadingBar.current.setState({loading:true})
+    this.saveImage()
   };
 
   handleTitle = (event) => {
@@ -85,7 +120,6 @@ class EditPost extends Component {
         this.setState({
           storageImg:{fileUrl:data}
         })
-      console.log('asdasd',)
   
       })
     }
@@ -129,23 +163,18 @@ class EditPost extends Component {
               />
                <input type="file" onChange={this.handleChange} accept="image/x-png,image/gif,image/jpeg,image/png"/>
                {this.props.images.items.map((image, index) => ( 
-              <ImagePost key={index} imageData={image} />
+              <ImagePost ref={this.postImage} key={index} imageData={image} hidden/>
                ))}
+              <div>
 
-          
-
-              <button onClick={this.saveFile}>Editar Post</button>
-             
+              <button style={{float:'left'}}>Editar Post</button>
+              <AwesomeComponent ref={this.loadingBar} />
+              </div>
             </form>
         
           </div>
         )}
-        <button
-          onClick={this.handleModal}
-          style={{ border: "none", marginRight: "1px" }}
-        >
-          Edit
-        </button>
+        <button  onClick={this.handleModal} style={{ border: "none", marginRight: "1px" }} > Edit  </button>
       </>
     );
   }

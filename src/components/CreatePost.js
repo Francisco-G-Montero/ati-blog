@@ -73,7 +73,6 @@ class CreatePost extends Component {
       }).catch(err=>{
         console.log('Hubo un error al guardar la imagen al Storage',err)
       })
-    
   }
   
   render() {

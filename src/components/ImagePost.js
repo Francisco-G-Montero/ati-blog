@@ -11,8 +11,6 @@ class ImagePost extends Component{
           this.setState({
             storageImg:{fileUrl:data}
           })
-          
-        console.log('hola',data)
         })
       }
     render (){

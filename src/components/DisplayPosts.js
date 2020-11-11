@@ -17,6 +17,10 @@ import { FaThumbsUp } from "react-icons/fa";
 import { createLike } from "../graphql/mutations";
 
 class DisplayPosts extends Component {
+  constructor(props) {
+    super(props);
+    this.postImage = React.createRef();
+  }
   state = {
     ownerId: "",
     ownerUsername: "",
@@ -74,7 +78,8 @@ class DisplayPosts extends Component {
           updatePost,
           ...posts.slice(index + 1),
         ];
-
+        console.log('postUpdateado',updatePost)
+        this.postImage.current.setState({storageImg:{fileUrl:updatePost.images.items[0].imageName}})
         this.setState({ posts: updatedPosts });
       },
     });
@@ -198,7 +203,7 @@ class DisplayPosts extends Component {
               <span style={{ fontSize: "19px", color: "gray" }}>Imagen de post:</span>
             )}
             {post.images.items.map((image, index) => (
-              <ImagePost key={index} imageData={image} />
+              <ImagePost ref={this.postImage}  key={index} imageData={image} />
             ))}
           <span>
             <CreateCommentPost postId={post.id} />
