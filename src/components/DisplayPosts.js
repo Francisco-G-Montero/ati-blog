@@ -78,10 +78,7 @@ class DisplayPosts extends Component {
           updatePost,
           ...posts.slice(index + 1),
         ];
-        console.log("postUpdateado", updatePost);
-        this.postImage.current.setState({
-          storageImg: { fileUrl: updatePost.images.items[0].imageName },
-        });
+        //this.postImage.current.setState({storageImg:{fileUrl:updatePost.images.items[0].imageName}})
         this.setState({ posts: updatedPosts });
       },
     });
@@ -127,7 +124,6 @@ class DisplayPosts extends Component {
 
   getPosts = async () => {
     const result = await API.graphql(graphqlOperation(listPosts));
-    console.log("todos los posts", result.data.listPosts.items);
     this.setState({ posts: result.data.listPosts.items });
   };
 
@@ -172,6 +168,9 @@ class DisplayPosts extends Component {
       return (
         <div className="posts" key={post.id} style={rowStyle}>
           <h1>{post.postTitle}</h1>
+          {post.images.items.map((image, index) => (
+            <ImagePost ref={this.postImage} key={index} imageData={image} />
+          ))}
           <span style={{ fontStyle: "italic", color: "#0ca5e287" }}>
             {"Escrito por: "}
             {post.postOwnerUsername}
@@ -185,13 +184,14 @@ class DisplayPosts extends Component {
               })}
             </time>
           </span>
-          <text>{post.postBody}</text>
+          <p>{post.postBody}</p>
           <br></br>
+
           <span>
             {post.postOwnerId === loggedInUser && (
               <>
                 <DeletePost data={post} />
-                <EditPost {...post} />
+                <EditPost {...post} getPosts={this.getPosts()} />
               </>
             )}
             <span>
@@ -214,9 +214,7 @@ class DisplayPosts extends Component {
               Imagen de post:
             </span>
           )}
-          {post.images.items.map((image, index) => (
-            <ImagePost ref={this.postImage} key={index} imageData={image} />
-          ))}
+
           <span>
             <CreateCommentPost postId={post.id} />
             {post.comments.length > 0 && (

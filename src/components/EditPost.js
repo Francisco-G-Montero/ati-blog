@@ -58,26 +58,31 @@ class EditPost extends Component {
             imageName: path,
             imageUrl: path,
           };
-          API.graphql(graphqlOperation(updateImage, { input })).then(() => {
-            console.log("imagen editada exitosamente");
-            this.updatePost();
-          });
+          await API.graphql(graphqlOperation(updateImage, { input })).then(
+            () => {
+              console.log("imagen editada exitosamente");
+              this.updatePost();
+            }
+          );
         } else {
           const input = {
             imageName: path,
             imageUrl: path,
             imagePostId: this.props.id,
           };
-          API.graphql(graphqlOperation(createImage, { input })).then(() => {
-            console.log("imagen creada exitosamente");
-          });
-          this.updatePost();
+          await API.graphql(graphqlOperation(createImage, { input })).then(
+            () => {
+              console.log("imagen creada exitosamente");
+              this.updatePost();
+            }
+          );
         }
       })
       .catch((err) => {
         console.log("Hubo un error al guardar la imagen al Storage", err);
       });
   };
+
   updatePost = () => {
     const input = {
       id: this.props.id,
@@ -86,6 +91,7 @@ class EditPost extends Component {
       postTitle: this.state.postData.postTitle,
       postBody: this.state.postData.postBody,
     };
+
     API.graphql(graphqlOperation(updatePost, { input })).then(() => {
       this.setState({ show: !this.state.show });
     });
@@ -101,6 +107,7 @@ class EditPost extends Component {
     event.preventDefault();
     this.loadingBar.current.setState({ loading: true });
     this.saveImage();
+    this.props.getPosts();
   };
 
   handleTitle = (event) => {
@@ -111,6 +118,7 @@ class EditPost extends Component {
       },
     });
   };
+
   handleBody = (event) => {
     this.setState({
       postData: {
@@ -122,13 +130,14 @@ class EditPost extends Component {
 
   componentDidMount = async () => {
     if (this.props.images.items[0]) {
-      Storage.get(this.props.images.items[0].imageName).then((data) => {
+      Storage.get(this.props.images.items[0].imageName).then((url) => {
         this.setState({
-          storageImg: { fileUrl: data },
+          storageImg: { fileUrl: url },
         });
       });
     }
   };
+
   componentWillMount = async () => {
     await Auth.currentUserInfo().then((user) => {
       this.setState({

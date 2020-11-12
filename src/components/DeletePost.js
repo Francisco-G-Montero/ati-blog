@@ -6,6 +6,7 @@ class DeletePost extends Component {
     const input = { id: postId };
     await API.graphql(graphqlOperation(deletePost, { input }));
   };
+
   render() {
     const post = this.props.data;
     return (

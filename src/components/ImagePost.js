@@ -3,15 +3,17 @@ import { Storage } from "aws-amplify";
 
 class ImagePost extends Component {
   state = {
-    storageImg: { fileUrl: "", file: "", filename: "" },
+    storageImg: { fileUrl: "" },
   };
   componentDidMount = async () => {
-    Storage.get(this.props.imageData.imageName).then((data) => {
+    console.log("imageData", this.props.imageData);
+    Storage.get(this.props.imageData.imageName).then((url) => {
       this.setState({
-        storageImg: { fileUrl: data },
+        storageImg: { fileUrl: url },
       });
     });
   };
+
   render() {
     return (
       <div className="imageDiv">
