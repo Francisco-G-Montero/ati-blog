@@ -113,6 +113,9 @@ class DisplayPosts extends Component {
       },
     });
   };
+  componentDidUpdate() {
+    this.getPosts();
+  }
 
   componentWillUnmount() {
     this.createPostListener.unsubscribe();
@@ -191,7 +194,7 @@ class DisplayPosts extends Component {
             {post.postOwnerId === loggedInUser && (
               <>
                 <DeletePost data={post} />
-                <EditPost {...post} getPosts={this.getPosts()} />
+                <EditPost {...post} />
               </>
             )}
             <span>

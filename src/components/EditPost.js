@@ -2,7 +2,7 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import React, { Component } from "react";
 import { updateImage, updatePost, createImage } from "../graphql/mutations";
 import { Storage } from "aws-amplify";
-import ImagePost from "./ImagePost";
+import ShowImage from "./ShowImage";
 import AwesomeComponent from "./AwesomeComponent ";
 
 class EditPost extends Component {
@@ -107,7 +107,6 @@ class EditPost extends Component {
     event.preventDefault();
     this.loadingBar.current.setState({ loading: true });
     this.saveImage();
-    this.props.getPosts();
   };
 
   handleTitle = (event) => {
@@ -180,7 +179,7 @@ class EditPost extends Component {
                 accept="image/x-png,image/gif,image/jpeg,image/png"
               />
               {this.props.images.items.map((image, index) => (
-                <ImagePost
+                <ShowImage
                   ref={this.postImage}
                   key={index}
                   imageData={image}

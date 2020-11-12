@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { Storage } from "aws-amplify";
 
-class ImagePost extends Component {
+class ShowImage extends Component {
   state = {
     storageImg: { fileUrl: "" },
   };
   componentDidMount = () => {
     Storage.get(this.props.imageData.imageName).then((url) => {
-      console.log(url);
       this.setState({
         storageImg: { fileUrl: url },
       });
@@ -36,4 +35,4 @@ class ImagePost extends Component {
     );
   }
 }
-export default ImagePost;
+export default ShowImage;
