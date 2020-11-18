@@ -24,7 +24,6 @@ class CreatePost extends Component {
       });
     });
   };
-  z;
 
   handleChangePost = (event) =>
     this.setState({
